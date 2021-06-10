@@ -414,13 +414,8 @@ switch ($action) {
     $post = $_POST;
     if (!$post) {
       // ToDo: Header Error 404
-      #exit();
+      exit();
     }
-
-    /* $post = array(
-      'danumber' => 72308,
-      'code' => 'CdORw6tY'
-    ); */
 
     foreach ($post as $k => $v) {
       $data[$k] = trim($v);
@@ -467,6 +462,7 @@ switch ($action) {
 
         $response = array(
           'status' => 'OK',
+          'hash' => $row['appointmentHash'],
           'fields' => $fields,
         );
       }
@@ -474,13 +470,23 @@ switch ($action) {
 
     if ($errors) {
       $response = array('errors' => $errors);
-    } else {
-      /* $sql = sprintf(
-        'DELETE FROM pobands WHERE daNumber = "%s"',
-        $conn->real_escape_string($v_danumber));
-      $conn->query($sql); */
     }
   break;
+
+  case 'deletebooking':
+    $hash = isset($_GET['h']) ? $_GET['h'] : null;
+    if (!$hash) {
+      // ToDo: Header Error 404
+      exit();
+    }
+
+    $sql = sprintf(
+      'DELETE FROM appointments WHERE appointmentHash = "%s"',
+      $conn->real_escape_string($hash));
+    $conn->query($sql);
+
+    $response = array('status' => 'OK');
+    break;
 }
 
 if (!$response) {

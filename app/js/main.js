@@ -189,35 +189,43 @@ const stepAction = async () => {
       });
     }
   } else if (name == 'dialog-details') {
-    const form = dialog.querySelector('form');
-    const formData = new FormData(form);
+    if (dialogCurrentStep === 0) {
+      const form = dialog.querySelector('form');
+      const formData = new FormData(form);
 
-    const response = await fetch(`${fetchUri}?a=code`, {
-      method: 'POST',
-      body: formData,
-    });
-    const json = await response.json();
-    if (json.data.status !== 'OK') {
-      showErrors(json.data);
-      return false;
-    }
-
-    const fields = json.data.fields;
-    Object.keys(fields).forEach(field => {
-      const node = document.getElementById(field);
-      if (node) {
-        node.textContent = fields[field];
+      const response = await fetch(`${fetchUri}?a=code`, {
+        method: 'POST',
+        body: formData,
+      });
+      const json = await response.json();
+      if (json.data.status !== 'OK') {
+        showErrors(json.data);
+        return false;
       }
-    });
 
-    dialog.querySelector('#btnDialogNext').removeAttribute('hidden');
-    dialog.querySelector('#btnDialogPrev').removeAttribute('hidden');
-    if (dialogCurrentStep == 0) {
-      const dialog = step.closest('.dialog-container');
-      dialog.querySelector('#btnDialogPrev').setAttribute('hidden', '');
-    }
-    if (dialogCurrentStep == dialogSteps.length - 1) {
-      dialog.querySelector('#btnDialogNext').setAttribute('hidden', '');
+      dialogHash = json.data.hash;
+      console.log(dialogHash);
+
+      const fields = json.data.fields;
+      Object.keys(fields).forEach(field => {
+        const node = document.getElementById(field);
+        if (node) {
+          node.textContent = fields[field];
+        }
+      });
+
+      
+    
+      const button = dialog.querySelector('#btnDialogNext');
+      button.classList.remove('button-colored');
+      button.classList.add('button-cancel');
+      button.textContent = 'Buchung löschen';
+    } else if (dialogCurrentStep === 1) {
+      const response = await fetch(`${fetchUri}?a=deletebooking&h=${dialogHash}`);
+      const json = await response.json();
+      if (json.data.status !== 'OK') {
+        return false;
+      }
     }
   }
 

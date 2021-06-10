@@ -238,7 +238,7 @@ $timezone = new DateTimeZone('Europe/Berlin');
       </div>
 
       <div class="dialog-step">
-        <div class="dialog-title">Buchungsdetails</div>
+        <div class="dialog-title">Buchung storniert</div>
         <div class="dialog-body">
           Ihre Buchung wurde erfolgreich storniert.
         </div>
@@ -247,7 +247,6 @@ $timezone = new DateTimeZone('Europe/Berlin');
       <div class="dialog-buttons">
         <button id="btnDialogPrev" class="button">Zurück</button>
         <button id="btnDialogNext" class="button button-colored">Weiter</button>
-        <button id="btnDialogDelete" class="button button-cancel" hidden>Buchung löschen</button>
       </div>
 
     </div>
